@@ -20,9 +20,11 @@ import {
 export async function loadFragment(path) {
   if (path && path.startsWith('/')) {
     const resp = await fetch(`${path}.plain.html`);
+    console.log("This is The Response: ", resp);
     if (resp.ok) {
       const main = document.createElement('main');
       main.innerHTML = await resp.text();
+      console.log("This is the main: ", main);
 
       // reset base path for media to fragment base
       const resetAttributeBase = (tag, attr) => {

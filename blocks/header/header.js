@@ -111,8 +111,10 @@ export default async function decorate(block) {
   // load nav as fragment
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
+  console.log("This is the navPath: ", navPath);
   const fragment = await loadFragment(navPath);
 
+  console.log("This is the fragment: ", fragment);
   // decorate nav DOM
   block.textContent = '';
   const nav = document.createElement('nav');
@@ -125,13 +127,13 @@ export default async function decorate(block) {
     if (section) section.classList.add(`nav-${c}`);
   });
 
-  const navBrand = nav.querySelector('.nav-brand');
+   const navBrand = nav.querySelector('.nav-brand');
   const brandLink = navBrand.querySelector('.button');
   if (brandLink) {
     brandLink.className = '';
     brandLink.closest('.button-container').className = '';
   }
-
+ 
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {

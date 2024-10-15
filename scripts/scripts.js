@@ -7,12 +7,31 @@ import {
   decorateSections,
   decorateBlocks,
   decorateTemplateAndTheme,
+  getMetadata,
+  getAllMetadata,
   waitForFirstImage,
   loadSection,
   loadSections,
   loadCSS,
   sampleRUM,
 } from './aem.js';
+
+
+const AUDIENCES = {
+  mobile: () => window.innerWidth < 600,
+  desktop: () => window.innerWidth >= 600,
+  'new-visitor': () => !localStorage.getItem('franklin-visitor-returning'),
+  'returning-visitor': () => !!localStorage.getItem('franklin-visitor-returning'),
+};
+
+window.hlx.plugins.add('experimentation', {
+  condition: () => getMetadata('experiment')
+    || Object.keys(getAllMetadata('campaign')).length
+    || Object.keys(getAllMetadata('audience')).length,
+  options: { audiences: AUDIENCES },
+  load: 'eager',
+  url: '/plugins/experimentation/src/index.js',
+});
 
 /**
  * Builds hero block and prepends to main in a new section.
@@ -75,6 +94,7 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+  await window.hlx.plugins.run('loadEager');
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
@@ -111,6 +131,7 @@ async function loadLazy(doc) {
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
+  window.hlx.plugins.run('loadLazy');
 }
 
 /**
@@ -124,7 +145,9 @@ function loadDelayed() {
 }
 
 async function loadPage() {
+  await window.hlx.plugins.load('eager');
   await loadEager(document);
+  await window.hlx.plugins.load('lazy');
   await loadLazy(document);
   loadDelayed();
 }
