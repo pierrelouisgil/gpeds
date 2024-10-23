@@ -9,8 +9,10 @@
           "edit",
           "preview"
         ],
-        "url": "https://localhost:9080",
+        "url": "https://experience.adobe.com/solutions/devx-services-experimentation-widget-poc/static-assets/resources/embed.html#/sidekick\"",
         "isPalette": true,
+        "passConfig": true,
+        "passReferrer": true,
         "paletteRect": "top: 50px; bottom: 10px; right: 10px; left: auto; width: 600px; height: calc(100vh - 60px)"
       }
     ]
